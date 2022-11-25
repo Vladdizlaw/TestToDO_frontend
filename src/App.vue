@@ -13,20 +13,13 @@ onMounted(async () => {
 });
 async function getTasks() {
   const tasks = await ApiService.GetTasks();
-  tasks?.forEach((t) => {
-    if (t.state == "currentTasks") {
-      state.currentTasks.push(t);
-    }
-    if (t.state == "doneTasks") {
-      state.doneTasks.push(t);
-    }
+  tasks?.forEach((t) => {  
+      state[t.state].push(t);
   });
 }
-async function updateTask(task, state) {
+async function updateTask(task, newState) {
   const updatedTask = { ...task };
-  if (state) {
-    updatedTask.state = state;
-  }
+  newState?updatedTask.state = newState:null
   await ApiService.UpdateTask(updatedTask);
   return updatedTask;
 }
@@ -95,9 +88,12 @@ async function createTask() {
   min-height: 8rem;
   overflow: auto;
   display: flex;
+  flex-shrink: 0;
+  height: fit-content;
+  /* flex-basis: 25vw; */
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 1rem;
   gap: 1rem;
   border-radius: 5px;
